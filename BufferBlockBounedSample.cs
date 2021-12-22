@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,15 +15,17 @@ namespace TPL.Dataflow.Samples
 			var bufferBlock = new BufferBlock<int>(
 				new DataflowBlockOptions { BoundedCapacity = 3 });
 
+			Stopwatch sw = Stopwatch.StartNew();
+
 			var consumer1 = new ActionBlock<int>(x =>
 			{
-				Console.WriteLine($"Message {x} consumed by Consumer 1");
-				Task.Delay(300).Wait();
+				Console.WriteLine($"Message {x} consumed by Consumer 1 ({sw.ElapsedMilliseconds})");
+				Task.Delay(3500).Wait();
 			}, new ExecutionDataflowBlockOptions{ BoundedCapacity = 1 });
 			var consumer2 = new ActionBlock<int>(x =>
 			{
-				Console.WriteLine($"Message {x} consumed by Consumer 2");
-				Task.Delay(300).Wait();
+				Console.WriteLine($"Message {x} consumed by Consumer 2 ({sw.ElapsedMilliseconds})");
+				Task.Delay(2500).Wait();
 			}, new ExecutionDataflowBlockOptions { BoundedCapacity = 1 });
 
 			//link producer with consumers
@@ -31,23 +34,24 @@ namespace TPL.Dataflow.Samples
 
 			for (int i = 0; i < 10; i++)
 			{
-				//bufferBlock.Post(i);
+				var value = i;
+				//bufferBlock.Post(value);
 
-				//if (!bufferBlock.Post(i))
+				//if (!bufferBlock.Post(value))
 				//{
-				//	Console.WriteLine($"Message {i} was rejected.");
+				//	Console.WriteLine($"Message {value} was rejected.");
 				//}
 
-				await bufferBlock.SendAsync(i)
+				await bufferBlock.SendAsync(value)
 					.ContinueWith(x =>
 					{
 						if (x.Result)
 						{
-							Console.WriteLine($"Message {i} was accepted");
+							Console.WriteLine($"({sw.ElapsedMilliseconds}) Message {value} was accepted");
 						}
 						else
 						{
-							Console.WriteLine($"Message {i} was rejected");
+							Console.WriteLine($"({sw.ElapsedMilliseconds}) Message {value} was rejected");
 						}
 					});
 			}

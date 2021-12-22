@@ -13,7 +13,7 @@ namespace TPL.Dataflow.Samples
 			//await BatchBlockSample.Start();
 			//await TransformManyBlockSample.Start();
 			//await BufferBlockSample.Start();
-			//await BufferBlockBounedSample.Start();
+			await BufferBlockBounedSample.Start();
 			//await BroadcastBlockSample.Start();
 			//await JoinBLockSample.Start();
 			//await JoinBlockParallelSample.Start();
@@ -27,7 +27,7 @@ namespace TPL.Dataflow.Samples
 			//await MultipleProducersCompletionSample.Start();
 			//await ErrorHandlingSample.Start();
 			//await EncapsulatedCustomBlockSample.Start();
-			await GuaranteedDeliveryBroadcastCustomBlockSample.Start();
+			//await GuaranteedDeliveryBroadcastCustomBlockSample.Start();
 		}
 	}
 }
